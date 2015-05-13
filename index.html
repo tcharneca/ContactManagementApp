@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Contacts Management App</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.4/angular.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash.min.js"></script>
+    <script src="main.js"></script>
+</head>
+<body  ng-controller="MainController">
+	<div class="container-fluid">
+		<h1>{{title}}</h1>
+		<div class="input-group">
+			<span class="input-group-addon"> <!-- Append the search icon to the form-control //-->
+				<span class="glyphicon glyphicon-search"></span>
+			</span>
+			<!-- Search bar starts //-->
+			<input type="text" class="form-control" ng-model="main.searchInput">
+			<!-- Search bar ends //-->
+		</div>
+		<br>
+		<!-- Add new contact button starts //-->
+		<div class="col-xs-6" ng-if="!isCreating"> 
+			<button class="btn btn-primary pull-right" ng-click="startCreating();"><span class="glyphicon glyphicon-plus-sign"></span> Add</button>
+		</div>
+		<!-- Add new contact button ends //-->
+		<br>
+		<h3 class=>Contacts</h3>
+		<!--  Table showing contacts starts //-->
+		<table class="table table-hover">
+			<thead>
+			  <tr>
+				<th>Name</th>
+				<th>Email</th>
+				<th>Location</th>
+				<th>Phone</th>
+			  </tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="contact in contacts | filter:main.searchInput"> 
+					<td>{{contact.name}}</td>
+					<td>{{contact.email}}</td>
+					<td>{{contact.location}}</td>
+					<td>{{contact.primary}}</td>
+					<td>
+						<!--Edit button starts //-->
+						<button class="btn btn-link pull-right" ng-click="setEditedContact(contact);startEditing();"><span class="glyphicon glyphicon-edit"></span></button>
+						<!-- Edit button ends //-->
+					</td>
+					<td>
+						<!-- Remove button starts //-->
+						<button class="btn btn-link" ng-click="deleteContact(contact)" >
+						<span class="glyphicon glyphicon-remove-sign text-danger"></span>
+						</button>
+						<!-- Remove button ends //-->
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<!--  Table showing contacts ends //-->
+		<br>
+		<!-- CREATING //-->
+		<div ng-if="isCreating">
+			<h3>Add a new contact</h3>
+			<!--  Add contact form starts //-->
+			<form class="create-form" role="form" ng-submit="addContact(newContact)">
+				<div class="form-group">
+					<label for="newContactName">Name</label>
+					<input type="text" class="form-control" id="newContactName" ng-model="newContact.name" required />
+				</div>
+				<div class="form-group">
+					<label for="newContactEmail">Email</label>
+					<input type="text" class="form-control" id="newContactEmail" ng-model="newContact.email" required />
+				</div>
+				<div class="form-group">
+					<label for="newContactLocation">Location</label>
+					<input type="text" class="form-control" id="newContactLocation" ng-model="newContact.location" required />
+				</div>
+				<div class="form-group">
+					<label for="newContactPhone">Phone</label>
+					<input type="text" class="form-control" id="newContactPhone" ng-model="newContact.primary" required />
+				</div>
+				<!-- Add button starts //-->
+				<div class="col-xs-6"> 
+					<button type="submit" class="btn btn-link btn-lg pull-right" ng-click="startCreating();"><span class="glyphicon glyphicon-plus-sign"></span> Add</button>
+				</div>
+				<!-- Add button ends //-->
+				<!-- Cancel new contact button starts //-->
+				<div class="col-xs-6" ng-if="isCreating"> 
+					<button class="btn btn-link btn-lg pull-right" ng-click="cancelCreating();"><span class="glyphicon glyphicon-plus-sign"></span> Cancel</button>
+				</div>
+				<!-- Cancel new contact button ends //-->
+			</form>
+			<!--  Add contact form ends //-->
+			
+		</div>
+		<!-- EDITING //-->
+		<div ng-show="shouldShowEditing()">
+			<h4>Editing {{editedContact.name}}</h4>
+			<!-- Edit form starts //-->
+			<form class ="edit-form" role="form" ng-submit="updateContact(editedContact)" novalidate>
+				<div class="form-group">
+					<label>Name</label>
+					<input type="text" class="form-control" ng-model="editedContact.name" placeholder="Enter name">
+				</div>
+				<div class="form-group">
+					<label>Email</label>
+					<input type="text" class="form-control" ng-model="editedContact.email" placeholder="Enter email">
+				</div>
+				<div class="form-group">
+					<label>Location</label>
+					<input type="text" class="form-control" ng-model="editedContact.location" placeholder="Enter location">
+				</div>
+				<div class="form-group">
+					<label>Phone</label>
+					<input type="text" class="form-control" ng-model="editedContact.primary" placeholder="Enter phone number">
+				</div>
+				<!-- Save button starts //-->
+				<div class="col-xs-6"> 
+					<button type="submit" class="btn btn-link btn-lg pull-right"><span class="glyphicon glyphicon-plus-sign"></span> Save</button>
+				</div>
+				<!-- Save button ends //-->
+				<!-- Cancel new contact button starts //-->
+				<div class="col-xs-6" ng-if="isCreating"> 
+					<button type="button" class="btn btn-link btn-lg pull-right" ng-click="cancelEditing();"><span class="glyphicon glyphicon-plus-sign"></span> Cancel</button>
+				</div>
+				<!-- Cancel new contact button ends //-->
+			</form>
+			<!-- Edit form ends //-->
+			<!-- Cancel edit button starts //-->
+			<div class="col-xs-6" ng-if="isEditing"> 
+				<button class="btn btn-link btn-lg pull-right" ng-click="cancelEditing();"><span class="glyphicon glyphicon-plus-sign"></span> Cancel</button>
+			</div>
+			<!-- Cancel edit button ends //-->
+		</div>
+	</div>
+</body>
+</html>
